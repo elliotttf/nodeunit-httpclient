@@ -5,6 +5,7 @@ var http = require('http'),
 
 /**
  * @param {Object}  Options:
+ *                      auth ('username:password')
  *                      host ('localhost')
  *                      port (80)
  *                      path ('')       - Base path URL e.g. '/api'
@@ -15,6 +16,7 @@ var http = require('http'),
 var HttpClient = module.exports = function(options) {
     options = options || {};
 
+    this.auth = options.auth || undefined;
     this.host = options.host || 'localhost';
     this.port = options.port || 80;
     this.path = options.path || '';
@@ -93,6 +95,10 @@ methods.forEach(function(method) {
             method: method == 'del' ? 'DELETE' : method.toUpperCase(),
             headers: underscore.extend({}, this.reqHeaders, req.headers)
         };
+
+        if (this.auth) {
+          options.auth = this.auth;
+        }
 
         var request = http.request(options);
 
